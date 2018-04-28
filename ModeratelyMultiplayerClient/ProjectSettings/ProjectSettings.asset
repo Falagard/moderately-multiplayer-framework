@@ -553,6 +553,7 @@ PlayerSettings:
     4: PROBUILDER_FBX_ENABLED
     7: PROBUILDER_FBX_ENABLED
     13: PROBUILDER_FBX_ENABLED
+    14: PROBUILDER_FBX_ENABLED
     17: PROBUILDER_FBX_ENABLED
     18: PROBUILDER_FBX_ENABLED
     19: PROBUILDER_FBX_ENABLED
@@ -645,7 +646,7 @@ PlayerSettings:
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled: {}
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: ce7a3bce-3a1a-4420-b37d-c5ea4af47d7d
   projectName: ModeratelyMultiplayerClient
   organizationId: falagard
