@@ -13,7 +13,7 @@ public class HexMesh : MonoBehaviour {
 	[NonSerialized] List<int> triangles;
 
 	Mesh hexMesh;
-	MeshCollider meshCollider;
+	public MeshCollider meshCollider;
 
 	void Awake () {
 		GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
@@ -59,7 +59,8 @@ public class HexMesh : MonoBehaviour {
 		hexMesh.SetTriangles(triangles, 0);
 		ListPool<int>.Add(triangles);
 		//hexMesh.RecalculateNormals();
-        hexMesh.RecalculateNormals(60);
+        hexMesh.RecalculateNormals(60); //use better recalculate normals function
+
 		if (useCollider) {
 			meshCollider.sharedMesh = hexMesh;
 		}

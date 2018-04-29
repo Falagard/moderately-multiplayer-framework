@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using MoonSharp.Interpreter;
+using UnityEngine.AI;
 
 public class HexGrid : MonoBehaviour {
 
@@ -41,7 +42,12 @@ public class HexGrid : MonoBehaviour {
 
 	HexCellShaderData cellShaderData;
 
-	void Awake () {
+    NavMeshData NavMeshData;
+    NavMeshDataInstance NavMeshDataInstance;
+    Vector3 BoundsCenter = Vector3.zero;
+    Vector3 BoundsSize = new Vector3(512f, 4000f, 512f);
+
+    void Awake () {
 		HexMetrics.noiseSource = noiseSource;
 		HexMetrics.InitializeHashGrid(seed);
 		HexUnit.unitPrefab = unitPrefab;
@@ -467,4 +473,49 @@ public class HexGrid : MonoBehaviour {
 		}
 		return visibleCells;
 	}
+
+    public void GenerateNavMesh()
+    {
+        NavMeshData = NavMeshBuilder.BuildNavMeshData(
+            NavMesh.GetSettingsByID(0),
+            GetBuildSources(),
+            new Bounds(BoundsCenter, BoundsSize),
+            Vector3.zero,
+            Quaternion.identity);
+        AddNavMeshData();
+    }
+
+    void AddNavMeshData()
+    {
+        if (NavMeshData != null)
+        {
+            if (NavMeshDataInstance.valid)
+            {
+                NavMesh.RemoveNavMeshData(NavMeshDataInstance);
+            }
+            NavMeshDataInstance = NavMesh.AddNavMeshData(NavMeshData);
+        }
+    }
+
+    List<NavMeshBuildSource> GetBuildSources()
+    {
+        List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
+
+        //foreach (var chunk in chunks)
+        //{
+        //    var source = new NavMeshBuildSource();
+        //    source.
+        //    chunk.terrain.meshCollider;
+        //}
+
+        NavMeshBuilder.CollectSources(
+            new Bounds(BoundsCenter, BoundsSize),
+            0,
+            NavMeshCollectGeometry.PhysicsColliders,
+            0,
+            new List<NavMeshBuildMarkup>(),
+            sources);
+
+        return sources;
+    }
 }

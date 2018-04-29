@@ -163,6 +163,9 @@ public class HexMapGenerator : MonoBehaviour {
 			grid.GetCell(i).SearchPhase = 0;
 		}
 
+        //generate navmesh
+	    grid.GenerateNavMesh();
+
 		Random.state = originalRandomState;
 	}
 
