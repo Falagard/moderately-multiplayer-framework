@@ -12,7 +12,7 @@ public class HexMesh : MonoBehaviour {
 	[NonSerialized] List<Vector2> uvs, uv2s;
 	[NonSerialized] List<int> triangles;
 
-	Mesh hexMesh;
+	public Mesh hexMesh;
 	public MeshCollider meshCollider;
 
 	void Awake () {

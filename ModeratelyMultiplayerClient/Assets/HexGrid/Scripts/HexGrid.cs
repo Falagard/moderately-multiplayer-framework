@@ -42,8 +42,8 @@ public class HexGrid : MonoBehaviour {
 
 	HexCellShaderData cellShaderData;
 
-    NavMeshData NavMeshData;
-    NavMeshDataInstance NavMeshDataInstance;
+    NavMeshData navMeshData;
+    NavMeshDataInstance navMeshDataInstance;
     Vector3 BoundsCenter = Vector3.zero;
     Vector3 BoundsSize = new Vector3(512f, 4000f, 512f);
 
@@ -54,6 +54,7 @@ public class HexGrid : MonoBehaviour {
 		cellShaderData = gameObject.AddComponent<HexCellShaderData>();
 		cellShaderData.Grid = this;
 		CreateMap(cellCountX, cellCountZ);
+        navMeshData = new NavMeshData(0);
 	}
 
 	public void AddUnit (HexUnit unit, HexCell location, float orientation) {
@@ -103,9 +104,17 @@ public class HexGrid : MonoBehaviour {
 			for (int x = 0; x < chunkCountX; x++) {
 				HexGridChunk chunk = chunks[i++] = Instantiate(chunkPrefab);
 				chunk.transform.SetParent(transform);
+			    chunk.ChunkRefreshed += OnChunkRefreshed;
 			}
 		}
 	}
+
+    void OnChunkRefreshed(HexGridChunk chunk)
+    {
+        Debug.Log("OnChunkRefreshed" + chunk.name);
+
+        GenerateNavMesh();
+    }
 
 	void CreateCells () {
 		cells = new HexCell[cellCountZ * cellCountX];
@@ -476,46 +485,45 @@ public class HexGrid : MonoBehaviour {
 
     public void GenerateNavMesh()
     {
-        NavMeshData = NavMeshBuilder.BuildNavMeshData(
-            NavMesh.GetSettingsByID(0),
-            GetBuildSources(),
-            new Bounds(BoundsCenter, BoundsSize),
-            Vector3.zero,
-            Quaternion.identity);
-        AddNavMeshData();
-    }
+        NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(0);
 
-    void AddNavMeshData()
-    {
-        if (NavMeshData != null)
-        {
-            if (NavMeshDataInstance.valid)
-            {
-                NavMesh.RemoveNavMeshData(NavMeshDataInstance);
-            }
-            NavMeshDataInstance = NavMesh.AddNavMeshData(NavMeshData);
-        }
-    }
+        var bounds = new Bounds(Vector3.zero, 1000.0f * Vector3.one);
 
-    List<NavMeshBuildSource> GetBuildSources()
-    {
         List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
 
-        //foreach (var chunk in chunks)
-        //{
-        //    var source = new NavMeshBuildSource();
-        //    source.
-        //    chunk.terrain.meshCollider;
-        //}
+        foreach (var chunk in chunks)
+        {
+            var source = new NavMeshBuildSource();
+            //source.component = chunk.terrain.meshCollider;
+            source.sourceObject = chunk.terrain.hexMesh;
+            source.shape = NavMeshBuildSourceShape.Mesh;
+            source.transform = chunk.terrain.transform.localToWorldMatrix;
+            source.area = 0;
+            sources.Add(source);
+        }
 
-        NavMeshBuilder.CollectSources(
-            new Bounds(BoundsCenter, BoundsSize),
-            0,
-            NavMeshCollectGeometry.PhysicsColliders,
-            0,
-            new List<NavMeshBuildMarkup>(),
-            sources);
+        NavMeshBuilder.UpdateNavMeshData(navMeshData,
+            settings,
+            sources,
+            bounds);
+        
+        if (navMeshData != null)
+        {
+            if (navMeshDataInstance.valid)
+            {
+                NavMesh.RemoveNavMeshData(navMeshDataInstance);
+            }
+            navMeshDataInstance = NavMesh.AddNavMeshData(navMeshData);
+            navMeshDataInstance.owner = this;
+        }
 
-        return sources;
+        //NavMeshPath path = new NavMeshPath();
+
+        //var sourceCube = GameObject.Find("SourceCube");
+        //var destinationCube = GameObject.Find("DestinationCube");
+
+        //NavMesh.CalculatePath(sourceCube.transform.position, destinationCube.transform.position, NavMesh.AllAreas, path);
+
+        //Debug.Log(path.corners.Length);
     }
 }

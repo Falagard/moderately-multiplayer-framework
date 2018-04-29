@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HexGridChunk : MonoBehaviour {
 
-	public HexMesh terrain, rivers, roads, water, waterShore, estuaries;
+    public event Action<HexGridChunk> ChunkRefreshed;
+
+    public HexMesh terrain, rivers, roads, water, waterShore, estuaries;
 
 	public HexFeatureManager features;
 
@@ -59,7 +62,10 @@ public class HexGridChunk : MonoBehaviour {
 		waterShore.Apply();
 		estuaries.Apply();
 		features.Apply();
-	}
+
+        if (ChunkRefreshed != null)
+            ChunkRefreshed.Invoke(this);
+    }
 
 	void Triangulate (HexCell cell) {
 		for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
