@@ -12,7 +12,7 @@
 
 //#define ENABLE_TEXTMESHPRO
 
-#if ENABLE_TEXTMESHPRO
+//#if ENABLE_TEXTMESHPRO
 
 #region Using Statements
 using MarkLight.ValueConverters;
@@ -843,4 +843,4 @@ namespace MarkLight.Views.UI
 
     #endregion
 }
-#endif
+//#endif
