@@ -20,6 +20,8 @@ public class HexGrid : MonoBehaviour {
 
 	public int seed;
 
+    private bool _updatingNavMesh = false;
+
 	public bool HasPath {
 		get {
 			return currentPathExists;
@@ -111,7 +113,7 @@ public class HexGrid : MonoBehaviour {
 
     void OnChunkRefreshed(HexGridChunk chunk)
     {
-        Debug.Log("OnChunkRefreshed" + chunk.name);
+        //Debug.Log("OnChunkRefreshed" + chunk.name);
 
         UpdateNavMesh();
     }
@@ -485,6 +487,9 @@ public class HexGrid : MonoBehaviour {
 
     private IEnumerator UpdateNavMeshDataAsync()
     {
+        _updatingNavMesh = true;
+        yield return 0;
+
         NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(0);
 
         var bounds = new Bounds(Vector3.zero, 1000.0f * Vector3.one);
@@ -514,11 +519,18 @@ public class HexGrid : MonoBehaviour {
             navMeshDataInstance = NavMesh.AddNavMeshData(navMeshData);
             navMeshDataInstance.owner = this;
         }
+
+        Debug.Log("NavMesh Updated");
+
+        _updatingNavMesh = false;
     }
 
     public void UpdateNavMesh()
     {
-        StartCoroutine(UpdateNavMeshDataAsync());
+        if (_updatingNavMesh == false)
+        {
+            StartCoroutine(UpdateNavMeshDataAsync());
+        }
     }
 
     //public void GenerateNavMesh()
