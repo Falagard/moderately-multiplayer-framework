@@ -2,22 +2,33 @@
 using MarkLight.Views.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using MarkLight;
+using MarkLight.Views;
 using UnityEngine;
 using UnityEngine.EventSystems;
 #endregion
 
 namespace MMF.UI
 {
+
+    public class MapItem
+    {
+        public string Name;
+    }
+
     /// <summary>
     /// Examples demonstrating the UI views.
     /// </summary>
     public class RuntimeEditor : UIView
     {
+        const int mapFileVersion = 4;
+
         private HexMapEditor _controller;
+        private HexMapGenerator _generator;
         public _int BrushSize;
         public _bool ElevationEnabled;
         public _int Elevation;
@@ -41,9 +52,24 @@ namespace MMF.UI
         public _int PlantLevel;
         public _bool SpecialEnabled;
         public _int SpecialLevel;
+        public _bool GenerateMaps;
+        public _string MapItemName;
 
         public MarkLight.Views.UI.List TexturesList;
-        
+        public MarkLight.Views.UI.Label OpenSaveTitle;
+
+        public ViewSwitcher ContentViewSwitcher;
+
+        public ObservableList<MapItem> MapItems;
+
+        public MarkLight.Views.UI.Button SaveMapButton;
+        public MarkLight.Views.UI.Button OpenMapButton;
+
+        public override void Initialize()
+        {
+            MapItems = new ObservableList<MapItem>();
+        }
+
         void Start()
         {
             GameObject controllerGO = GameObject.Find("RuntimeEditorController");
@@ -53,9 +79,12 @@ namespace MMF.UI
                 _controller = controllerGO.GetComponent<HexMapEditor>();
                 //_controller.AddHandler(gameObject);
             }
-            else
+
+            GameObject generatorGO = GameObject.Find("Hex Map Generator");
+
+            if (generatorGO != null)
             {
-                Debug.Log("RuntimeEditorController GameObject not found");
+                _generator = generatorGO.GetComponent<HexMapGenerator>();
             }
 
             //defaults
@@ -64,6 +93,152 @@ namespace MMF.UI
             WalledModeIgnore.Value = true;
 
             TexturesList.SelectItem(0);
+        }
+
+        void FillMapItems()
+        {
+            MapItems.Clear();
+            string[] paths =
+                Directory.GetFiles(Application.persistentDataPath, "*.map");
+            Array.Sort(paths);
+            for (int i = 0; i < paths.Length; i++)
+            {
+                MapItem item = new MapItem()
+                {
+                    Name = Path.GetFileNameWithoutExtension(paths[i])
+                };
+                MapItems.Add(item);
+            }
+        }
+
+        public void NewClicked()
+        {
+            ContentViewSwitcher.SwitchTo("NewMapRegion");
+        }
+
+        public void SaveClicked()
+        {
+            FillMapItems();
+            ContentViewSwitcher.SwitchTo("OpenSaveMapRegion");
+            OpenSaveTitle.Text.Value = "Save Map";
+            SaveMapButton.IsActive.Value = true;
+            OpenMapButton.IsActive.Value = false;
+        }
+
+        public void OpenClicked()
+        {
+            FillMapItems();
+            ContentViewSwitcher.SwitchTo("OpenSaveMapRegion");
+            OpenSaveTitle.Text.Value = "Open Map";
+            SaveMapButton.IsActive.Value = false;
+            OpenMapButton.IsActive.Value = true;
+        }
+
+        public void CancelOpenSaveMapClicked()
+        {
+            ContentViewSwitcher.SwitchTo("MainRegion");
+        }
+
+        public void CancelNewMapClicked()
+        {
+            ContentViewSwitcher.SwitchTo("MainRegion");
+        }
+
+        public void OpenMapClicked()
+        {
+            string path = GetSelectedPath();
+
+            if (!File.Exists(path))
+            {
+                Debug.LogError("File does not exist " + path);
+                return;
+            }
+            using (BinaryReader reader = new BinaryReader(File.OpenRead(path)))
+            {
+                int header = reader.ReadInt32();
+                if (header <= mapFileVersion)
+                {
+                    _controller.hexGrid.Load(reader, header);
+                    HexMapCamera.ValidatePosition();
+                }
+                else
+                {
+                    Debug.LogWarning("Unknown map format " + header);
+                }
+            }
+            ContentViewSwitcher.SwitchTo("MainRegion");
+        }
+
+        public void MapItemListItemSelected(ItemSelectionActionData itemSelectData)
+        {
+            string text = itemSelectData.ItemView.Text;
+            MapItemName.Value = text;
+        }
+
+        public void SaveMapClicked()
+        {
+            string path = GetSelectedPath();
+
+            using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                writer.Write(mapFileVersion);
+                _controller.hexGrid.Save(writer);
+            }
+            ContentViewSwitcher.SwitchTo("MainRegion");
+        }
+
+        public void DeleteMapClicked()
+        {
+            string path = GetSelectedPath();
+            if (path == null)
+            {
+                return;
+            }
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            MapItemName.Value = "";
+            FillMapItems();
+        }
+
+        string GetSelectedPath()
+        {
+            if (string.IsNullOrEmpty(MapItemName.Value))
+            {
+                return null;
+            }
+            return Path.Combine(Application.persistentDataPath, MapItemName.Value + ".map");
+        }
+
+        public void SmallMapClicked()
+        {
+            CreateMap(20, 15);
+        }
+
+        public void MediumMapClicked()
+        {
+            CreateMap(40, 30);
+        }
+
+        public void LargeMapClicked()
+        {
+            CreateMap(80, 60);
+        }
+
+        void CreateMap(int x, int z)
+        {
+            if (GenerateMaps.Value)
+            {
+                _generator.GenerateMap(x, z);
+            }
+            else
+            {
+                _controller.hexGrid.CreateMap(x, z);
+            }
+            //HexMapCamera.ValidatePosition();
+
+            ContentViewSwitcher.SwitchTo("MainRegion");
         }
 
         public void BrushSizeValueChanged()
@@ -251,6 +426,20 @@ namespace MMF.UI
             _controller.SetRiverMode(0);
             _controller.SetRoadMode(0);
         }
+
+        //public void ShowHideLeftSidebarToggleClicked()
+        //{
+        //    if (ShowHideLeftSidebarToggleButton.Text == "Hide")
+        //    {
+        //        SlideLeftMenuInAnimation.StartAnimation();
+        //        ShowHideLeftSidebarToggleButton.Text.Value = "Show";
+        //    }
+        //    {
+        //        SlideLeftMenuInAnimation.ReverseAnimation();
+        //        ShowHideLeftSidebarToggleButton.Text.Value = "Hide";
+        //    }
+
+        //}
 
         public void TerrainTabSelected(TabSelectionActionData actionData)
         {

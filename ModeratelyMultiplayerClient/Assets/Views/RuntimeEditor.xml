@@ -1,184 +1,230 @@
 <RuntimeEditor xmlns="MarkLight">
   <UserInterface>
-    <Region Height="5%" Width="100%" Alignment="TopLeft">
-      <Group Orientation="Horizontal" Alignment="TopLeft" Margin="5,5,5,5">
-          <Button Text="File" FontSize="12" Width="50" Height="20"></Button>
-      </Group>
-    </Region>
-    <Region Height="95%" Alignment="BottomLeft" Width="200" Margin="0,5,0,0">
-      <Region Width="90%" Alignment="Left">
-        <TabPanel Style="Menu" Margin="10,10,10,10">
-          <Tab Text="Terrain">
-            <TabHeader Style="Menu" FontSize="12" Height="20"/>
-            <TabPanel Style="SubMenu" TabListOrientation="Horizontal" Margin="5" TabSelected="TerrainTabSelected">
-              <Tab Text="Textures">
-                <TabHeader Style="SubMenu" FontSize="12" Height="20"  TextPadding="4,2,4,2"/>
-                <Group Orientation="Vertical" Alignment="TopLeft" Margin="0,10,0,0">
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <Label Text="Brush Size" FontSize="12" Height="20" Width="100%" Margin="5,0,0,0"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{BrushSize}" Id="BrushSize1Slider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="BrushSizeValueChanged"/>
-                        <InputField Text="{BrushSize}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="BrushSizeValueChanged"/>
+    <ViewSwitcher Id="ContentViewSwitcher" TransitionIn="BounceInAnimation">
+      <Region Id="MainRegion">
+        <Region Height="5%" Width="100%" Alignment="TopLeft">
+          <Group Orientation="Horizontal" Alignment="TopLeft" Margin="5,5,5,5">
+            <Button Text="New" FontSize="12" Width="50" Height="20" Click="NewClicked"></Button>
+            <Button Text="Open" FontSize="12" Width="50" Height="20" Click="OpenClicked"></Button>
+            <Button Text="Save" FontSize="12" Width="50" Height="20" Click="SaveClicked"></Button>
+          </Group>
+        </Region>
+        <Region Id="LeftSideBar" Height="95%" Alignment="BottomLeft" Width="200" Margin="0,5,0,0">
+          <Region Width="90%" Alignment="Left">
+            <TabPanel Style="Menu" Margin="10,10,10,10">
+              <Tab Text="Terrain">
+                <TabHeader Style="Menu" FontSize="12" Height="20"/>
+                <TabPanel Style="SubMenu" TabListOrientation="Horizontal" Margin="5" TabSelected="TerrainTabSelected">
+                  <Tab Text="Textures">
+                    <TabHeader Style="SubMenu" FontSize="12" Height="20"  TextPadding="4,2,4,2"/>
+                    <Group Orientation="Vertical" Alignment="TopLeft" Margin="0,10,0,0">
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <Label Text="Brush Size" FontSize="12" Height="20" Width="100%" Margin="5,0,0,0"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{BrushSize}" Id="BrushSize1Slider" Orientation="Horizontal" Min="0" Max="3" Height="10" Width="100" ValueChanged="BrushSizeValueChanged"/>
+                            <InputField Text="{BrushSize}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="BrushSizeValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Group Orientation="Vertical">
+                        <Label Text="Textures" FontSize="12" AdjustToText="Width" Height="15" />
+                        <List Id="TexturesList" Width="146" Height="240" IsScrollable="True" ItemSelected="TextureListItemSelected">
+                          <ListItem Text="Sand" FontSize="12" Height="20" />
+                          <ListItem Text="Grass" FontSize="12" Height="20" />
+                          <ListItem Text="Mud" FontSize="12" Height="20" />
+                          <ListItem Text="Stone" FontSize="12" Height="20" />
+                          <ListItem Text="Snow" FontSize="12" Height="20" />
+                        </List>
                       </Group>
                     </Group>
-                  </Frame>
-                  <Group Orientation="Vertical">
-                    <Label Text="Textures" FontSize="12" AdjustToText="Width" Height="15" />
-                    <List Id="TexturesList" Width="146" Height="20" ItemSelected="TextureListItemSelected">
-                      <ListItem Text="Sand" FontSize="12" Height="20" />
-                      <ListItem Text="Grass" FontSize="12" Height="20" />
-                      <ListItem Text="Mud" FontSize="12" Height="20" />
-                      <ListItem Text="Stone" FontSize="12" Height="20" />
-                      <ListItem Text="Snow" FontSize="12" Height="20" />
-                    </List>
-                  </Group>
-                </Group>
+                  </Tab>
+                  <Tab Text="Sculpt">
+                    <TabHeader Style="SubMenu" FontSize="12" Height="20"  TextPadding="4,2,4,2"  />
+                    <Group Orientation="Vertical" Alignment="TopLeft" Margin="0,10,0,0">
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <Label Text="Brush Size" FontSize="12" Height="20" Width="100%" Margin="5,0,0,0"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{BrushSize}" Id="BrushSize2Slider" Orientation="Horizontal" Min="0" Max="3" Height="10" Width="100" ValueChanged="BrushSizeValueChanged"/>
+                            <InputField Text="{BrushSize}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="BrushSizeValueChanged" />
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <CheckBox Text="Elevation" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{ElevationEnabled}" Click="ElevationCheckboxClicked"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Id="ElevationSlider" Orientation="Horizontal" Min="0" Max="10" Value="{Elevation}" Height="10" Width="100" ValueChanged="ElevationValueChanged"/>
+                            <InputField Text="{Elevation}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="ElevationValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <CheckBox Text="Water" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{WaterEnabled}" Click="WaterCheckboxClicked"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Id="WaterSlider" Orientation="Horizontal" Min="0" Max="10" Value="{WaterLevel}" Height="10" Width="100" ValueChanged="WaterLevelValueChanged"/>
+                            <InputField Text="{WaterLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="WaterLevelValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Group Orientation="Vertical">
+                        <Label Text="River" FontSize="12" AdjustToText="Width" Height="15" />
+                        <Group Spacing="5px" Orientation="Horizontal" ContentAlignment="Left">
+                          <RadioButton Text="---" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RiverModeIgnore}" Click="RiverModeClicked"/>
+                          <RadioButton Text="Yes" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RiverModeYes}" Click="RiverModeClicked"/>
+                          <RadioButton Text="No" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RiverModeNo}" Click="RiverModeClicked"/>
+                        </Group>
+                      </Group>
+                      <Group Orientation="Vertical">
+                        <Label Text="Road" FontSize="12" AdjustToText="Width" Height="15" />
+                        <Group Spacing="5px" Orientation="Horizontal" ContentAlignment="Left">
+                          <RadioButton Text="---" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RoadModeIgnore}" Click="RoadModeClicked"/>
+                          <RadioButton Text="Yes" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RoadModeYes}" Click="RoadModeClicked"/>
+                          <RadioButton Text="No" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RoadModeNo}" Click="RoadModeClicked"/>
+                        </Group>
+                      </Group>
+                    </Group>
+                  </Tab>
+                  <Tab Text="Features">
+                    <TabHeader Style="SubMenu" FontSize="12" Height="20" TextPadding="4,2,4,2"/>
+                    <Group Orientation="Vertical" Alignment="TopLeft" Margin="0,10,0,0">
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <Label Text="Brush Size" FontSize="12" Height="20" Width="100%" Margin="5,0,0,0"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{BrushSize}" Id="BrushSize3Slider" Orientation="Horizontal" Min="0" Max="3" Height="10" Width="100" ValueChanged="BrushSizeValueChanged"/>
+                            <InputField Text="{BrushSize}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="BrushSizeValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <CheckBox Text="Urban" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{UrbanEnabled}" Click="UrbanCheckboxClicked"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{UrbanLevel}" Id="UrbanSlider" Orientation="Horizontal" Min="0" Max="3" Height="10" Width="100" ValueChanged="UrbanLevelValueChanged"/>
+                            <InputField Text="{UrbanLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="UrbanLevelValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <CheckBox Text="Farm" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{FarmEnabled}" Click="FarmCheckboxClicked"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{FarmLevel}" Id="FarmSlider" Orientation="Horizontal" Min="0" Max="3" Height="10" Width="100" ValueChanged="FarmLevelValueChanged"/>
+                            <InputField Text="{FarmLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="FarmLevelValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <CheckBox Text="Plant" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{PlantEnabled}" Click="PlantCheckboxClicked"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{PlantLevel}" Id="PlantSlider" Orientation="Horizontal" Min="0" Max="3" Height="10" Width="100" ValueChanged="PlantLevelValueChanged"/>
+                            <InputField Text="{PlantLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="PlantLevelValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
+                        <Group>
+                          <Group Alignment="Left">
+                            <CheckBox Text="Special" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20"  IsChecked="{SpecialEnabled}" Click="SpecialCheckboxClicked"/>
+                          </Group>
+                          <Group Orientation="Horizontal">
+                            <Slider Value="{SpecialLevel}" Id="SpecialSlider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="SpecialLevelValueChanged"/>
+                            <InputField Text="{SpecialLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
+                                        CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="SpecialLevelValueChanged"/>
+                          </Group>
+                        </Group>
+                      </Frame>
+                      <Group Orientation="Vertical">
+                        <Label Text="Walled" FontSize="12" AdjustToText="Width" Height="15" />
+                        <Group Spacing="5px" Orientation="Horizontal" ContentAlignment="Left">
+                          <RadioButton Text="---" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{WalledModeIgnore}" Click="WalledModeClicked"/>
+                          <RadioButton Text="Yes" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{WalledModeYes}" Click="WalledModeClicked"/>
+                          <RadioButton Text="No" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{WalledModeNo}" Click="WalledModeClicked"/>
+                        </Group>
+                      </Group>
+                    </Group>
+                  </Tab>
+                </TabPanel>
               </Tab>
-              <Tab Text="Sculpt">
-                <TabHeader Style="SubMenu" FontSize="12" Height="20"  TextPadding="4,2,4,2"  />
-                <Group Orientation="Vertical" Alignment="TopLeft" Margin="0,10,0,0">
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <Label Text="Brush Size" FontSize="12" Height="20" Width="100%" Margin="5,0,0,0"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{BrushSize}" Id="BrushSize2Slider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="BrushSizeValueChanged"/>
-                        <InputField Text="{BrushSize}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="BrushSizeValueChanged" />
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <CheckBox Text="Elevation" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{ElevationEnabled}" Click="ElevationCheckboxClicked"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Id="ElevationSlider" Orientation="Horizontal" Min="0" Max="10" Value="{Elevation}" Height="10" Width="100" ValueChanged="ElevationValueChanged"/>
-                        <InputField Text="{Elevation}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="ElevationValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <CheckBox Text="Water" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{WaterEnabled}" Click="WaterCheckboxClicked"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Id="WaterSlider" Orientation="Horizontal" Min="0" Max="10" Value="{WaterLevel}" Height="10" Width="100" ValueChanged="WaterLevelValueChanged"/>
-                        <InputField Text="{WaterLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="WaterLevelValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Group Orientation="Vertical">
-                    <Label Text="River" FontSize="12" AdjustToText="Width" Height="15" />
-                    <Group Spacing="5px" Orientation="Horizontal" ContentAlignment="Left">
-                      <RadioButton Text="---" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RiverModeIgnore}" Click="RiverModeClicked"/>
-                      <RadioButton Text="Yes" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RiverModeYes}" Click="RiverModeClicked"/>
-                      <RadioButton Text="No" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RiverModeNo}" Click="RiverModeClicked"/>
-                    </Group>
-                  </Group>
-                  <Group Orientation="Vertical">
-                    <Label Text="Road" FontSize="12" AdjustToText="Width" Height="15" />
-                    <Group Spacing="5px" Orientation="Horizontal" ContentAlignment="Left">
-                      <RadioButton Text="---" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RoadModeIgnore}" Click="RoadModeClicked"/>
-                      <RadioButton Text="Yes" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RoadModeYes}" Click="RoadModeClicked"/>
-                      <RadioButton Text="No" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{RoadModeNo}" Click="RoadModeClicked"/>
-                    </Group>
-                  </Group>
-                </Group>
-              </Tab>
-              <Tab Text="Features">
-                <TabHeader Style="SubMenu" FontSize="12" Height="20" TextPadding="4,2,4,2"/>
-                <Group Orientation="Vertical" Alignment="TopLeft" Margin="0,10,0,0">
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <Label Text="Brush Size" FontSize="12" Height="20" Width="100%" Margin="5,0,0,0"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{BrushSize}" Id="BrushSize3Slider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="BrushSizeValueChanged"/>
-                        <InputField Text="{BrushSize}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="BrushSizeValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <CheckBox Text="Urban" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{UrbanEnabled}" Click="UrbanCheckboxClicked"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{UrbanLevel}" Id="UrbanSlider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="UrbanLevelValueChanged"/>
-                        <InputField Text="{UrbanLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="UrbanLevelValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <CheckBox Text="Farm" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{FarmEnabled}" Click="FarmCheckboxClicked"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{FarmLevel}" Id="FarmSlider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="FarmLevelValueChanged"/>
-                        <InputField Text="{FarmLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="FarmLevelValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <CheckBox Text="Plant" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20" IsChecked="{PlantEnabled}" Click="PlantCheckboxClicked"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{PlantLevel}" Id="PlantSlider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="PlantLevelValueChanged"/>
-                        <InputField Text="{PlantLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="PlantLevelValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Frame BackgroundColor="Gray" ContentMargin="2,2,2,2" Margin="0,2,0,2" Width="100%">
-                    <Group>
-                      <Group Alignment="Left">
-                        <CheckBox Text="Special" CheckBoxHeight="12" CheckBoxWidth="12" FontSize="12" Height="20"  IsChecked="{SpecialEnabled}" Click="SpecialCheckboxClicked"/>
-                      </Group>
-                      <Group Orientation="Horizontal">
-                        <Slider Value="{SpecialLevel}" Id="SpecialSlider" Orientation="Horizontal" Min="0" Max="10" Height="10" Width="100" ValueChanged="SpecialLevelValueChanged"/>
-                        <InputField Text="{SpecialLevel}" Width="40" TextAlignment="Center" Height="20" FontSize="12" FontColor="black" Margin="0,0,0,0"
-                                    CharacterValidation="Integer" ContentType="IntegerNumber" TextMargin="0,-3,0,0" ValueChanged="SpecialLevelValueChanged"/>
-                      </Group>
-                    </Group>
-                  </Frame>
-                  <Group Orientation="Vertical">
-                    <Label Text="Walled" FontSize="12" AdjustToText="Width" Height="15" />
-                    <Group Spacing="5px" Orientation="Horizontal" ContentAlignment="Left">
-                      <RadioButton Text="---" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{WalledModeIgnore}" Click="WalledModeClicked"/>
-                      <RadioButton Text="Yes" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{WalledModeYes}" Click="WalledModeClicked"/>
-                      <RadioButton Text="No" FontSize="12" RadioButtonHeight="12" RadioButtonWidth="12" TextMargin="-5,0,0,0" IsChecked="{WalledModeNo}" Click="WalledModeClicked"/>
-                    </Group>
-                  </Group>
-                </Group>
+              <Tab Text="Prefabs">
+                <TabHeader Style="Menu" FontSize="12" Height="20"/>
               </Tab>
             </TabPanel>
-          </Tab>
-          <Tab Text="Prefabs">
-            <TabHeader Style="Menu" FontSize="12" Height="20"/>
-          </Tab>
-        </TabPanel>
+          </Region>
+          <!--<Region Width="10%" Alignment="TopRight" Margin="0,55,0,0">
+            <Button Id="ShowHideLeftSidebarToggleButton" Text="Hide" FontSize="12" Width="30" Height="20"  Alignment="TopRight" Click="ShowHideLeftSidebarToggleClicked"></Button>
+          </Region>-->
+        </Region>
+        <!--<ViewAnimation Id="SlideLeftMenuInAnimation">
+          <Animate Field="LeftSideBar.Offset" From="0,0,0" To="-170,0,0" Duration="500ms" />
+        </ViewAnimation>-->
       </Region>
-      <Region Width="10%" Alignment="TopRight" Margin="0,55,0,0">
-        <Button Text="Hide" FontSize="12" Width="30" Height="20"  Alignment="TopRight"></Button>
+      <Region Id="NewMapRegion">
+        <Region Style="Window" Width="200" Height="200">
+          <Group Alignment="Center">
+            <Label Font="Fonts/Roboto-Bold.ttf" FontColor="#000000" Text="Create New Map" FontSize="14" AdjustToText="Width" Height="15" />
+            <CheckBox IsChecked="{GenerateMaps}" Text="Generate" FontColor="#000000" CheckBoxHeight="16" CheckBoxWidth="16" FontSize="12" Height="20" Margin="0,10,0,0"/>
+            <Button Text="Small" Click="SmallMapClicked" FontSize="12" Height="20" Margin="0,5,0,0" />
+            <Button Text="Medium" Click="MediumMapClicked" FontSize="12" Height="20" />
+            <Button Text="Large" Click="LargeMapClicked" FontSize="12" Height="20" />
+            <Button Text="Cancel" Click="CancelNewMapClicked" FontSize="12" Height="20" Margin="0,5,0,0" />
+          </Group>
+        </Region>
       </Region>
-    </Region>
+      <Region Id="OpenSaveMapRegion">
+        <Region Style="Window" Width="200" Height="340">
+          <Group Alignment="Center">
+            <Label Id="OpenSaveTitle" Font="Fonts/Roboto-Bold.ttf" FontColor="#000000" Text="Open Map" FontSize="14" AdjustToText="Width" Height="20" />
+            <List Id="MapItemList" Items="{MapItems}" Width="146" Height="200" IsScrollable="True" ItemSelected="MapItemListItemSelected">
+              <ListItem Text="{#Item.Name}" FontSize="12" Height="20" IsTemplate="True" />
+            </List>
+            <Label FontColor="#000000" Text="Map Name" FontSize="12" AdjustToText="Width" Height="20" Margin="0,5,0,0" />
+            <InputField Text="{MapItemName}" TextMargin="0,0,0,0" Width="145" TextAlignment="Left" Height="20" FontSize="12" FontColor="black" Margin="0,5,0,0" />
+            <!--Group Alignment="Center" Orientation="Horizontal">-->
+              <Button Id="SaveMapButton" Text="Save" Click="SaveMapClicked" FontSize="12" Height="20" Margin="0,5,0,0" />
+              <Button Id="OpenMapButton" Text="Open" Click="OpenMapClicked" FontSize="12" Height="20" Margin="0,5,0,0" />
+              <Button Text="Delete" Click="DeleteMapClicked" FontSize="12" Height="20" />
+              <Button Text="Cancel" Click="CancelOpenSaveMapClicked" FontSize="12" Height="20" Margin="0,5,0,0" />
+            <!--</Group>-->
+          </Group>
+        </Region>
+      </Region>
+    </ViewSwitcher>
+    
+    <ViewAnimation Id="BounceInAnimation">
+      <Animate Field="Scale" From="0" To="1" Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+      <Animate Field="Rotation" From="0,0,-20" To="0,0,0" Duration="0.5s" EasingFunction="BackEaseInOut" />
+    </ViewAnimation>
+  
   </UserInterface>
   <EventSystem />
+  
 </RuntimeEditor>
