@@ -27,8 +27,10 @@ namespace MMF.UI
     {
         const int mapFileVersion = 4;
 
-        private HexMapEditor _controller;
-        private HexMapGenerator _generator;
+        private HexMapEditor _hexMapEditor;
+        private HexMapGenerator _hexMapGenerator;
+        private PrefabManager _prefabManager;
+
         public _int BrushSize;
         public _bool ElevationEnabled;
         public _int Elevation;
@@ -72,19 +74,26 @@ namespace MMF.UI
 
         void Start()
         {
-            GameObject controllerGO = GameObject.Find("RuntimeEditorController");
+            GameObject hexMapEditorGO = GameObject.Find("Hex Map Editor");
 
-            if (controllerGO != null)
+            if (hexMapEditorGO != null)
             {
-                _controller = controllerGO.GetComponent<HexMapEditor>();
-                //_controller.AddHandler(gameObject);
+                _hexMapEditor = hexMapEditorGO.GetComponent<HexMapEditor>();
+                //_hexMapEditor.AddHandler(gameObject);
             }
 
-            GameObject generatorGO = GameObject.Find("Hex Map Generator");
+            GameObject hexMapGeneratorGO = GameObject.Find("Hex Map Generator");
 
-            if (generatorGO != null)
+            if (hexMapGeneratorGO != null)
             {
-                _generator = generatorGO.GetComponent<HexMapGenerator>();
+                _hexMapGenerator = hexMapGeneratorGO.GetComponent<HexMapGenerator>();
+            }
+
+            GameObject prefabManagerGO = GameObject.Find("Prefab Manager");
+
+            if (prefabManagerGO != null)
+            {
+                _prefabManager = prefabManagerGO.GetComponent<PrefabManager>();
             }
 
             //defaults
@@ -158,7 +167,7 @@ namespace MMF.UI
                 int header = reader.ReadInt32();
                 if (header <= mapFileVersion)
                 {
-                    _controller.hexGrid.Load(reader, header);
+                    _hexMapEditor.hexGrid.Load(reader, header);
                     HexMapCamera.ValidatePosition();
                 }
                 else
@@ -182,7 +191,7 @@ namespace MMF.UI
             using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
                 writer.Write(mapFileVersion);
-                _controller.hexGrid.Save(writer);
+                _hexMapEditor.hexGrid.Save(writer);
             }
             ContentViewSwitcher.SwitchTo("MainRegion");
         }
@@ -230,11 +239,11 @@ namespace MMF.UI
         {
             if (GenerateMaps.Value)
             {
-                _generator.GenerateMap(x, z);
+                _hexMapGenerator.GenerateMap(x, z);
             }
             else
             {
-                _controller.hexGrid.CreateMap(x, z);
+                _hexMapEditor.hexGrid.CreateMap(x, z);
             }
             //HexMapCamera.ValidatePosition();
 
@@ -245,7 +254,7 @@ namespace MMF.UI
         {
             Debug.Log("Value changed: " + BrushSize.Value);
             
-            _controller.SetBrushSize(BrushSize.Value);
+            _hexMapEditor.SetBrushSize(BrushSize.Value);
         }
 
         public void TextureListItemSelected(ItemSelectionActionData itemSelectData)
@@ -273,7 +282,7 @@ namespace MMF.UI
                     break;
             }
 
-            _controller.SetTerrainTypeIndex(index);
+            _hexMapEditor.SetTerrainTypeIndex(index);
 
             _terrainTypeIndex = index;
             
@@ -283,63 +292,63 @@ namespace MMF.UI
         public void ElevationCheckboxClicked()
         {
             //Debug.Log("Elevation Checkbox Clicked: " + ElevationEnabled.Value);
-            _controller.SetApplyElevation(ElevationEnabled.Value);
+            _hexMapEditor.SetApplyElevation(ElevationEnabled.Value);
         }
 
         public void SpecialCheckboxClicked()
         {
-            _controller.SetApplySpecialIndex(SpecialEnabled.Value);
+            _hexMapEditor.SetApplySpecialIndex(SpecialEnabled.Value);
         }
 
         public void PlantCheckboxClicked()
         {
-            _controller.SetApplyPlantLevel(PlantEnabled.Value);
+            _hexMapEditor.SetApplyPlantLevel(PlantEnabled.Value);
         }
 
         public void UrbanCheckboxClicked()
         {
-            _controller.SetApplyUrbanLevel(UrbanEnabled.Value);
+            _hexMapEditor.SetApplyUrbanLevel(UrbanEnabled.Value);
         }
 
         public void FarmCheckboxClicked()
         {
-            _controller.SetApplyFarmLevel(FarmEnabled.Value);
+            _hexMapEditor.SetApplyFarmLevel(FarmEnabled.Value);
         }
 
         public void ElevationValueChanged()
         {
-            _controller.SetElevation(Elevation.Value);
+            _hexMapEditor.SetElevation(Elevation.Value);
         }
 
         public void WaterCheckboxClicked()
         {
             //Debug.Log("Elevation Checkbox Clicked: " + ElevationEnabled.Value);
-            _controller.SetApplyWaterLevel(WaterEnabled.Value);
+            _hexMapEditor.SetApplyWaterLevel(WaterEnabled.Value);
         }
 
         public void WaterLevelValueChanged()
         {
-            _controller.SetWaterLevel(WaterLevel.Value);
+            _hexMapEditor.SetWaterLevel(WaterLevel.Value);
         }
 
         public void SpecialLevelValueChanged()
         {
-            _controller.SetSpecialIndex(SpecialLevel.Value);
+            _hexMapEditor.SetSpecialIndex(SpecialLevel.Value);
         }
 
         public void FarmLevelValueChanged()
         {
-            _controller.SetFarmLevel(FarmLevel.Value);
+            _hexMapEditor.SetFarmLevel(FarmLevel.Value);
         }
 
         public void UrbanLevelValueChanged()
         {
-            _controller.SetUrbanLevel(UrbanLevel.Value);
+            _hexMapEditor.SetUrbanLevel(UrbanLevel.Value);
         }
 
         public void PlantLevelValueChanged()
         {
-            _controller.SetPlantLevel(PlantLevel.Value);
+            _hexMapEditor.SetPlantLevel(PlantLevel.Value);
         }
 
         public void RiverModeClicked()
@@ -351,15 +360,15 @@ namespace MMF.UI
         {
             if (RiverModeIgnore.Value)
             {
-                _controller.SetRiverMode(0);
+                _hexMapEditor.SetRiverMode(0);
             }
             else if (RiverModeYes.Value)
             {
-                _controller.SetRiverMode(1);
+                _hexMapEditor.SetRiverMode(1);
             }
             else if (RiverModeNo.Value)
             {
-                _controller.SetRiverMode(2);
+                _hexMapEditor.SetRiverMode(2);
             }
         }
 
@@ -372,15 +381,15 @@ namespace MMF.UI
         {
             if (RoadModeIgnore.Value)
             {
-                _controller.SetRoadMode(0);
+                _hexMapEditor.SetRoadMode(0);
             }
             else if (RoadModeYes.Value)
             {
-                _controller.SetRoadMode(1);
+                _hexMapEditor.SetRoadMode(1);
             }
             else if (RoadModeNo.Value)
             {
-                _controller.SetRoadMode(2);
+                _hexMapEditor.SetRoadMode(2);
             }
         }
 
@@ -393,38 +402,38 @@ namespace MMF.UI
         {
             if (WalledModeIgnore.Value)
             {
-                _controller.SetWalledMode(0);
+                _hexMapEditor.SetWalledMode(0);
             }
             else if (WalledModeYes.Value)
             {
-                _controller.SetWalledMode(1);
+                _hexMapEditor.SetWalledMode(1);
             }
             else if (WalledModeNo.Value)
             {
-                _controller.SetWalledMode(2);
+                _hexMapEditor.SetWalledMode(2);
             }
         }
 
         private void DisableTexturesMode()
         {
-            _controller.SetTerrainTypeIndex(-1);
+            _hexMapEditor.SetTerrainTypeIndex(-1);
         }
 
         private void DisableFeaturesMode()
         {
-            _controller.SetApplyFarmLevel(false);
-            _controller.SetApplyPlantLevel(false);
-            _controller.SetApplySpecialIndex(false);
-            _controller.SetApplyUrbanLevel(false);
-            _controller.SetWalledMode(0);
+            _hexMapEditor.SetApplyFarmLevel(false);
+            _hexMapEditor.SetApplyPlantLevel(false);
+            _hexMapEditor.SetApplySpecialIndex(false);
+            _hexMapEditor.SetApplyUrbanLevel(false);
+            _hexMapEditor.SetWalledMode(0);
         }
 
         private void DisableSculptMode()
         {
-            _controller.SetApplyElevation(false);
-            _controller.SetApplyWaterLevel(false);
-            _controller.SetRiverMode(0);
-            _controller.SetRoadMode(0);
+            _hexMapEditor.SetApplyElevation(false);
+            _hexMapEditor.SetApplyWaterLevel(false);
+            _hexMapEditor.SetRiverMode(0);
+            _hexMapEditor.SetRoadMode(0);
         }
 
         //public void ShowHideLeftSidebarToggleClicked()
@@ -441,30 +450,44 @@ namespace MMF.UI
 
         //}
 
+        public void ModeTabSelected(TabSelectionActionData actionData)
+        {
+            if (actionData.TabView.Text == "Terrain")
+            {
+                _hexMapEditor.SetEditMode(true);
+                _prefabManager.SetEditMode(false);
+            }
+            else if (actionData.TabView.Text == "Objects")
+            {
+                _hexMapEditor.SetEditMode(false);
+                _prefabManager.SetEditMode(true);
+            }
+        }
+
         public void TerrainTabSelected(TabSelectionActionData actionData)
         {
             if (actionData.TabView.Text == "Textures")
             {
                 DisableSculptMode();
                 DisableFeaturesMode();
-                _controller.SetTerrainTypeIndex(_terrainTypeIndex);
+                _hexMapEditor.SetTerrainTypeIndex(_terrainTypeIndex);
             }
             else if (actionData.TabView.Text == "Sculpt")
             {
                 DisableTexturesMode();
                 DisableFeaturesMode();
-                _controller.SetApplyElevation(ElevationEnabled.Value);
-                _controller.SetApplyWaterLevel(WaterEnabled.Value);
+                _hexMapEditor.SetApplyElevation(ElevationEnabled.Value);
+                _hexMapEditor.SetApplyWaterLevel(WaterEnabled.Value);
                 UpdateRiverMode();
                 UpdateRoadMode();
             } else if (actionData.TabView.Text == "Features")
             {
                 DisableTexturesMode();
                 DisableSculptMode();
-                _controller.SetApplyUrbanLevel(UrbanEnabled.Value);
-                _controller.SetApplyFarmLevel(FarmEnabled.Value);
-                _controller.SetApplyPlantLevel(PlantEnabled.Value);
-                _controller.SetApplySpecialIndex(SpecialEnabled.Value);
+                _hexMapEditor.SetApplyUrbanLevel(UrbanEnabled.Value);
+                _hexMapEditor.SetApplyFarmLevel(FarmEnabled.Value);
+                _hexMapEditor.SetApplyPlantLevel(PlantEnabled.Value);
+                _hexMapEditor.SetApplySpecialIndex(SpecialEnabled.Value);
                 UpdateWalledMode();
             }
         }

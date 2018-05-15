@@ -11,7 +11,7 @@
         </Region>
         <Region Id="LeftSideBar" Height="95%" Alignment="BottomLeft" Width="200" Margin="0,5,0,0">
           <Region Width="90%" Alignment="Left">
-            <TabPanel Style="Menu" Margin="10,10,10,10">
+            <TabPanel Style="Menu" Margin="10,10,10,10" TabSelected="ModeTabSelected">
               <Tab Text="Terrain">
                 <TabHeader Style="Menu" FontSize="12" Height="20"/>
                 <TabPanel Style="SubMenu" TabListOrientation="Horizontal" Margin="5" TabSelected="TerrainTabSelected">
@@ -174,7 +174,7 @@
                   </Tab>
                 </TabPanel>
               </Tab>
-              <Tab Text="Prefabs">
+              <Tab Text="Objects">
                 <TabHeader Style="Menu" FontSize="12" Height="20"/>
               </Tab>
             </TabPanel>
