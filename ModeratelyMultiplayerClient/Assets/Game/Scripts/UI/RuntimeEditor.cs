@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using LiteDB;
 using MarkLight;
 using MarkLight.Views;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace MMF.UI
 
     public class MapItem
     {
+        public ObjectId Id;
         public string Name;
     }
 
@@ -56,6 +58,7 @@ namespace MMF.UI
         public _int SpecialLevel;
         public _bool GenerateMaps;
         public _string MapItemName;
+        private MapItem _selectedMapItem;
 
         public MarkLight.Views.UI.List TexturesList;
         public MarkLight.Views.UI.Label OpenSaveTitle;
@@ -181,18 +184,33 @@ namespace MMF.UI
         public void MapItemListItemSelected(ItemSelectionActionData itemSelectData)
         {
             string text = itemSelectData.ItemView.Text;
+            _selectedMapItem = itemSelectData.Item as MapItem;
             MapItemName.Value = text;
+            
         }
 
         public void SaveMapClicked()
         {
-            string path = GetSelectedPath();
+            //string path = GetSelectedPath();
 
-            using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
-            {
-                writer.Write(mapFileVersion);
-                _hexMapEditor.hexGrid.Save(writer);
-            }
+            //using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+            //{
+            //    writer.Write(mapFileVersion);
+            //    _hexMapEditor.hexGrid.Save(writer);
+            //}
+
+            HexGridData hexGridData = new HexGridData();
+
+            _hexMapEditor.hexGrid.Save(hexGridData);
+
+            //save to the database
+            Map map = new Map();
+            map.HexGridData = hexGridData;
+            map.Name = MapItemName.Value;
+
+            //we'll always disable the old one and insert a new one
+
+
             ContentViewSwitcher.SwitchTo("MainRegion");
         }
 

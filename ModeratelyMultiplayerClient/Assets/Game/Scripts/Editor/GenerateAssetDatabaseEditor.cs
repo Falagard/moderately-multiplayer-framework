@@ -11,8 +11,8 @@ public class GenerateAssetDatabaseEditor : EditorWindow
     [MenuItem("MMF/Generate Asset Database")]
     public static void Init()
     {
-        var ds = new DataService("game.db");
-        ds.CreateDb();
+        //var ds = new DataService("game.db");
+        //ds.CreateDb();
 
         var connectionString = string.Format(@"Assets/StreamingAssets/{0}", "lite.db");
         var assetDatas = EditorHelper.GetAtPath<AssetDataScriptableObject>("Game/Data");
@@ -27,13 +27,25 @@ public class GenerateAssetDatabaseEditor : EditorWindow
 
                 foreach (var assetData in assetDatas)
                 {
-                    var asset = new Asset()
-                    {
-                        Name = assetData.name,
-                        Id = assetData.Id
-                    };
+                    Debug.Log("checking " + assetData.Id.ToString());
+                    var id = new ObjectId(assetData.Id);
 
-                    collection.Insert(asset);
+                    //check if asset exists
+                    if (collection.FindById(id) == null)
+                    {
+                        Debug.Log("asset not found " + assetData.Id.ToString());
+                        var asset = new Asset()
+                        {
+                            Name = assetData.name,
+                            Id = new ObjectId(assetData.Id)
+                        };
+
+                        collection.Insert(asset);
+                    }
+                    else
+                    {
+                        Debug.Log("asset found " + assetData.Id.ToString());
+                    }
                 }
 
             }
@@ -43,16 +55,16 @@ public class GenerateAssetDatabaseEditor : EditorWindow
             Debug.Log(ex.Message);
         }
         
-        foreach (var assetData in assetDatas)
-        {
-            //Debug.Log(assetData.name + " " + assetData.Id);
-            var asset = new Asset()
-            {
-                Name = assetData.name,
-                Id = assetData.Id
-            };
+        //foreach (var assetData in assetDatas)
+        //{
+        //    //Debug.Log(assetData.name + " " + assetData.Id);
+        //    var asset = new Asset()
+        //    {
+        //        Name = assetData.name,
+        //        Id = assetData.Id
+        //    };
 
-            ds.CreateAsset(asset);
-        }
+        //    ds.CreateAsset(asset);
+        //}
     }
 }

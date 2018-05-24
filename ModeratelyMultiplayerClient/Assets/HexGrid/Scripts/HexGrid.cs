@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using MMF;
 using MoonSharp.Interpreter;
 using UnityEngine.AI;
 
@@ -252,6 +253,21 @@ public class HexGrid : MonoBehaviour {
 			units[i].Save(writer);
 		}    
 	}
+
+    public void Save(HexGridData hexGridData)
+    {
+        hexGridData.CellCountX = cellCountX;
+        hexGridData.CellCountZ = cellCountZ;
+
+        hexGridData.Cells = new List<HexCellData>();
+
+        for (int i = 0; i < cells.Length; i++)
+        {
+            HexCellData hexCellData = new HexCellData();
+            cells[i].Save(hexCellData);
+            hexGridData.Cells.Add(hexCellData);
+        }
+    }
     
 	public void Load (BinaryReader reader, int header) {
 		ClearPath();

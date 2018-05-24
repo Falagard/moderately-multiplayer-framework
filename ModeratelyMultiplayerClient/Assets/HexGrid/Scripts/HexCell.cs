@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.IO;
 using System.Text;
+using MMF;
 
 public class HexCell : MonoBehaviour {
 
@@ -546,25 +547,42 @@ public class HexCell : MonoBehaviour {
         }
     }
 
-    public void Save(StringBuilder s)
+    public void Save(HexCellData hexCellData)
     {
-        s.AppendLine(@"
-            loadSceneApi.addHexGridCell(" 
-                + terrainTypeIndex + "," 
-                + elevation + ","
-                + waterLevel + ","
-                + urbanLevel + ","
-                + farmLevel + ","
-                + plantLevel + ","
-                + specialIndex + ","
-                + (walled ? "true" : "false")  + ","
-                + (hasIncomingRiver ? "true" : "false") + ","
-                + (int)outgoingRiver + ","
-                + RoadFlags + ","
-            + ");"
-        );
-
+        hexCellData.UrbanLevel = this.UrbanLevel;
+        hexCellData.Elevation = this.Elevation;
+        hexCellData.FarmLevel = this.FarmLevel;
+        hexCellData.HasIncomingRiver = this.HasIncomingRiver;
+        hexCellData.HasOutgoingRiver = this.HasOutgoingRiver;
+        hexCellData.IncomingRiver = (int)this.IncomingRiver;
+        hexCellData.OutgoingRiver = (int) this.OutgoingRiver;
+        hexCellData.PlantLevel = (int) this.PlantLevel;
+        hexCellData.RoadFlags = this.RoadFlags;
+        hexCellData.SpecialIndex = this.SpecialIndex;
+        hexCellData.TerrainTypeIndex = this.TerrainTypeIndex;
+        hexCellData.Walled = this.Walled;
+        hexCellData.WaterLevel = this.WaterLevel;
     }
+
+    //public void Save(StringBuilder s)
+    //{
+    //    s.AppendLine(@"
+    //        loadSceneApi.addHexGridCell(" 
+    //            + terrainTypeIndex + "," 
+    //            + elevation + ","
+    //            + waterLevel + ","
+    //            + urbanLevel + ","
+    //            + farmLevel + ","
+    //            + plantLevel + ","
+    //            + specialIndex + ","
+    //            + (walled ? "true" : "false")  + ","
+    //            + (hasIncomingRiver ? "true" : "false") + ","
+    //            + (int)outgoingRiver + ","
+    //            + RoadFlags + ","
+    //        + ");"
+    //    );
+
+    //}
 
 	public void Load (BinaryReader reader, int header) {
 		terrainTypeIndex = reader.ReadByte();
