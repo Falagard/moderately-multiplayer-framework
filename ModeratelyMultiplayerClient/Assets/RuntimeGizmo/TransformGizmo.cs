@@ -49,6 +49,16 @@ namespace RuntimeGizmos
 
 		static Material lineMaterial;
 
+	    private GameObject placeholderGameObject = null;
+
+	    void Start()
+	    {
+	        if (placeholderGameObject == null)
+	        {
+                placeholderGameObject = new GameObject("TransformGizmoPlaceholder");
+            }
+	    }
+
 		void Awake()
 		{
 			myCamera = GetComponent<Camera>();
@@ -146,6 +156,8 @@ namespace RuntimeGizmos
 			totalRotationAmount = Quaternion.identity;
 
 			Vector3 originalTargetPosition = target.position;
+		    placeholderGameObject.transform.position = target.position;
+		    placeholderGameObject.transform.rotation = target.rotation;
 			Vector3 planeNormal = (transform.position - target.position).normalized;
 			Vector3 axis = GetSelectedAxisDirection();
 			Vector3 projectedAxis = Vector3.ProjectOnPlane(axis, planeNormal).normalized;
@@ -161,8 +173,14 @@ namespace RuntimeGizmos
 					if(type == TransformType.Move)
 					{
 						float moveAmount = ExtVector3.MagnitudeInDirection(mousePosition - previousMousePosition, projectedAxis) * moveSpeedMultiplier;
-						target.Translate(axis * moveAmount, Space.World);
-					}
+                        target.Translate(axis * moveAmount, Space.World);
+                        //placeholderGameObject.transform.Translate(axis * moveAmount, Space.World);
+
+                        //var currentPos = transform.position;
+                        //transform.position = Vector3(Mathf.Round(currentPos.x / grid_scale) * grid_scale,
+                        //                             Mathf.Round(currentPos.y / grid_scale) * grid_scale,
+                        //                             Mathf.Round(currentPos.z / grid_scale) * grid_scale);
+                    }
 
 					if(type == TransformType.Scale)
 					{
@@ -188,7 +206,8 @@ namespace RuntimeGizmos
 						}else{
 							Vector3 projected = (selectedAxis == Axis.Any || ExtVector3.IsParallel(axis, planeNormal)) ? planeNormal : Vector3.Cross(axis, planeNormal);
 							float rotateAmount = (ExtVector3.MagnitudeInDirection(mousePosition - previousMousePosition, projected) * rotateSpeedMultiplier) / GetDistanceMultiplier();
-							target.Rotate(axis, rotateAmount, Space.World);
+						    //rotateAmount = Mathf.Round(rotateAmount/15.0f)*15.0f;
+                            target.Rotate(axis, rotateAmount, Space.World);
 							totalRotationAmount *= Quaternion.Euler(axis * rotateAmount);
 						}
 					}
