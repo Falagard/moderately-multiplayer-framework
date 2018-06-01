@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -36,11 +35,11 @@ public class ExempleFollowSpline : MonoBehaviour {
         spline = GetComponent<Spline>();
         PlaceFollower();
 
-        EditorApplication.update += EditorUpdate;
+        //EditorApplication.update += EditorUpdate;
     }
 
     void OnDisable() {
-        EditorApplication.update -= EditorUpdate;
+        //EditorApplication.update -= EditorUpdate;
     }
 
     void EditorUpdate() {

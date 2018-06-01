@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783a48ff2cdad054d994fc428b30c340, type: 3}
+  m_Name: AssetData
+  m_EditorClassIdentifier: 
+  Id: 5b10d8c31856454a449c9b13
+  Path: 
+  AssetType: 0
+  Size: 0
+  LogicPrefab: {fileID: 0}
+  ColliderPrefab: {fileID: 0}
+  ViewHighPrefab: {fileID: 0}
+  ViewMediumPrefab: {fileID: 0}
+  ViewLowPrefab: {fileID: 0}
+  ViewVeryLowPrefab: {fileID: 0}

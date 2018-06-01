@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Name: Asset1
   m_EditorClassIdentifier: 
   Id: 5afba150185645659c2a1716
-  Collider: {fileID: 0}
-  ViewPrefab: {fileID: 0}
+  Path: 
+  AssetType: 0
+  Size: 0
+  LogicPrefab: {fileID: 0}
+  ColliderPrefab: {fileID: 0}
+  ViewHighPrefab: {fileID: 1733452281005674, guid: 67ffd41e4fea9f540b648edcbd61fc88,
+    type: 2}
+  ViewMediumPrefab: {fileID: 0}
+  ViewLowPrefab: {fileID: 0}
+  ViewVeryLowPrefab: {fileID: 0}

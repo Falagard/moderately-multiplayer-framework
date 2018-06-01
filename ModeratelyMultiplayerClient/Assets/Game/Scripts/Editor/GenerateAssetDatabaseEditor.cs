@@ -11,9 +11,6 @@ public class GenerateAssetDatabaseEditor : EditorWindow
     [MenuItem("MMF/Generate Asset Database")]
     public static void Init()
     {
-        //var ds = new DataService("game.db");
-        //ds.CreateDb();
-
         var connectionString = string.Format(@"Assets/StreamingAssets/{0}", "lite.db");
         var assetDatas = EditorHelper.GetAtPath<AssetDataScriptableObject>("Game/Data");
 
@@ -37,7 +34,15 @@ public class GenerateAssetDatabaseEditor : EditorWindow
                         var asset = new Asset()
                         {
                             Name = assetData.name,
-                            Id = new ObjectId(assetData.Id)
+                            Id = new ObjectId(assetData.Id),
+                            Path = null,
+                            AssetType = 1,
+                            ColliderPrefabName = assetData.ColliderPrefab != null ? AssetDatabase.GetAssetPath(assetData.ColliderPrefab) : null,
+                            LogicPrefabName = assetData.LogicPrefab != null ? AssetDatabase.GetAssetPath(assetData.LogicPrefab) : null,
+                            ViewHighPrefabName = assetData.ViewHighPrefab != null ? AssetDatabase.GetAssetPath(assetData.ViewHighPrefab) : null,
+                            ViewMediumPrefabName = assetData.ViewMediumPrefab != null ? AssetDatabase.GetAssetPath(assetData.ViewMediumPrefab) : null,
+                            ViewLowPrefabName = assetData.ViewLowPrefab != null ? AssetDatabase.GetAssetPath(assetData.ViewLowPrefab) : null,
+                            ViewVeryLowPrefabName = assetData.ViewVeryLowPrefab != null ? AssetDatabase.GetAssetPath(assetData.ViewVeryLowPrefab) : null,
                         };
 
                         collection.Insert(asset);
@@ -54,17 +59,5 @@ public class GenerateAssetDatabaseEditor : EditorWindow
         {
             Debug.Log(ex.Message);
         }
-        
-        //foreach (var assetData in assetDatas)
-        //{
-        //    //Debug.Log(assetData.name + " " + assetData.Id);
-        //    var asset = new Asset()
-        //    {
-        //        Name = assetData.name,
-        //        Id = assetData.Id
-        //    };
-
-        //    ds.CreateAsset(asset);
-        //}
     }
 }
